@@ -1,13 +1,9 @@
-time=8pm
-message="Commit at $((($(date +%s)-$(date -d $time +%s))/60)) minutes"
-message="$(git remote get-url origin | grep -o "[[:digit:]]+[ap]m$")"
-
-echo "$message"
+date=$(date)
 remote=$(git remote get-url origin)
-echo $remote
-
-
-echo $(git remote get-url origin | grep "[[:digit:]]+[ap]m")
-if echo $remote | grep -q "[[:digit:]]+[ap]m$"; then
-	echo "Test"
+time=$(echo $remote | grep -o "[0-9]\+[a]m$")
+if [[ -n "$time" ]]; then
+	message="$(date -d "$date" "+%a %b %d") $time Lab: Commit at $((($(date -d "$date" +%s)-$(date -d $time +%s))/60)) minutes"
+else
+	message="Commit at $(date)"
 fi
+echo "$message"
